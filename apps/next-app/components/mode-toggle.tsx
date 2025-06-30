@@ -3,7 +3,7 @@
 import * as React from "react";
 
 // Utilities
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/clsx-handler";
 
 // Next.js Hooks
 import { useTheme } from "next-themes";

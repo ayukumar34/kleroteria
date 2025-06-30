@@ -1,8 +1,15 @@
 // Express
 import express, { Application } from 'express';
 
-// Cookie parser
+// Environment
+import dotenv from 'dotenv';
+dotenv.config();
+
+// Cookie Parser
 import cookieParser from 'cookie-parser';
+
+// CORS
+import cors from 'cors';
 
 // Pino
 import pinoHttp from 'pino-http';
@@ -17,7 +24,15 @@ const app: Application = express();
 app.use(express.json());
 app.use(cookieParser());
 
-// Pino
+// CORS Middleware
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
+}));
+
+// Pino Middleware
 app.use(pinoHttp({ logger }));
 
 // Routes

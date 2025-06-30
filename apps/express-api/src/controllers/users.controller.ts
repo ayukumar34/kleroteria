@@ -20,6 +20,7 @@ import { eq, and, lt, gt } from 'drizzle-orm';
 import { asyncHandler } from '../utils/async-handler';
 
 // Types
+
 interface SignUpRequest {
   firstName: string;
   lastName: string;
@@ -31,6 +32,7 @@ interface SignUpRequest {
 interface SignInRequest {
   email: string;
   password: string;
+  rememberMe: boolean;
 }
 
 // Helper function to generate user ID
@@ -50,17 +52,23 @@ const generateSessionId = (): string => {
 
 // Sign Up Controller
 export const signUp = asyncHandler(async (req: Request, res: Response) => {
-  const { firstName, lastName, email, password, phone }: SignUpRequest = req.body;
+  const {
+    firstName,
+    lastName,
+    email,
+    phone,
+    password,
+  }: SignUpRequest = req.body;
 
   // Validate required fields
-  if (!firstName || !lastName || !email || !password) {
+  if (!firstName || !lastName || !email || !phone || !password) {
     return res.status(400).json({
       success: false,
       message: 'Bad Request'
     });
   }
 
-  // Validate email format
+  // Validate email
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     return res.status(400).json({
@@ -78,7 +86,7 @@ export const signUp = asyncHandler(async (req: Request, res: Response) => {
   }
 
   try {
-    // Check if user already exists
+    // Check conflict
     const existingUser = await db.select().from(schema.users).where(eq(schema.users.email, email)).limit(1);
 
     if (existingUser.length > 0) {
@@ -168,7 +176,7 @@ export const signUp = asyncHandler(async (req: Request, res: Response) => {
 
 // Sign In Controller
 export const signIn = asyncHandler(async (req: Request, res: Response) => {
-  const { email, password }: SignInRequest = req.body;
+  const { email, password, rememberMe }: SignInRequest = req.body;
 
   // Validate required fields
   if (!email || !password) {
@@ -179,7 +187,7 @@ export const signIn = asyncHandler(async (req: Request, res: Response) => {
   }
 
   try {
-    // Find user by email
+    // Find user
     const [user]: User[] = await db.select().from(schema.users).where(eq(schema.users.email, email)).limit(1);
 
     if (!user) {
@@ -202,16 +210,19 @@ export const signIn = asyncHandler(async (req: Request, res: Response) => {
     // Create new session
     const sessionId = generateSessionId();
     const sessionToken = generateSessionToken();
-    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
-    // Clean up expired sessions for this user
+    // Set session duration
+    const sessionDuration = rememberMe ? 7 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000;
+    const expiresAt = new Date(Date.now() + sessionDuration);
+
+    // Delete expired sessions
     await db.delete(schema.sessions)
       .where(and(
         eq(schema.sessions.userId, user.id),
         lt(schema.sessions.expiresAt, new Date())
       ));
 
-    // Create new session
+    // Create session
     await db.insert(schema.sessions).values({
       id: sessionId,
       userId: user.id,
@@ -226,7 +237,7 @@ export const signIn = asyncHandler(async (req: Request, res: Response) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      maxAge: sessionDuration,
     });
 
     res.status(200).json({
@@ -264,7 +275,7 @@ export const signOut = asyncHandler(async (req: Request, res: Response) => {
       await db.delete(schema.sessions).where(eq(schema.sessions.token, sessionToken));
     }
 
-    // Clear session cookie
+    // Clear session
     res.clearCookie('sessionToken');
 
     res.status(200).json({

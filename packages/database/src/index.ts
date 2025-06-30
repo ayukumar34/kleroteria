@@ -1,3 +1,7 @@
+// Environment
+import dotenv from "dotenv";
+dotenv.config();
+
 // Drizzle ORM
 import { drizzle } from "drizzle-orm/postgres-js";
 
@@ -11,8 +15,6 @@ import {
 } from "./schema";
 
 const connectionString = process.env.SUPABASE_CONNECTION_STRING
-
-console.log(connectionString);
 
 if (!connectionString) {
   throw new Error("SUPABASE_CONNECTION_STRING is not set in the environment variables");
