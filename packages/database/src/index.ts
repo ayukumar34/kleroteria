@@ -27,5 +27,9 @@ export const schema = {
   sessions,
 };
 
+// Export types
+export type User = typeof users.$inferSelect;
+export type Session = typeof sessions.$inferSelect;
+
 // Create database
 export const db = drizzle(client, { schema });

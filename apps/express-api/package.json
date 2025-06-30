@@ -11,6 +11,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@repo/database": "workspace:*",
+    "@types/bcrypt": "^5.0.2",
+    "@types/cookie-parser": "^1.4.9",
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "drizzle-orm": "^0.44.2",
     "express": "^5.1.0",
     "pino": "^9.7.0",
     "pino-http": "^10.5.0",
