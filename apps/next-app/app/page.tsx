@@ -49,7 +49,7 @@ export default function Home() {
   return (
     <div className="container mx-auto p-8">
       <nav className="flex justify-between items-start mb-8">
-        <h1 className="text-2xl font-medium">Midnight</h1>
+        <h1 className="text-2xl font-medium">kleroteria</h1>
         <div className="flex gap-4 items-center">
           <ModeToggle />
         </div>
