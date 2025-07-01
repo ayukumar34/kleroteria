@@ -8,6 +8,13 @@ import { redirect } from 'next/navigation';
 
 // UI Components
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter
+} from '@/components/ui/card';
+
+// `ModeToggle` Component
 import { ModeToggle } from "@/components/mode-toggle";
 
 // Custom Hooks
@@ -15,7 +22,6 @@ import { useSession } from "@/lib/hooks/useSession";
 
 // Lucide Icons
 import { LoaderCircleIcon } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 
 export default function Home() {
   const { user, loading, error, signOut } = useSession();
