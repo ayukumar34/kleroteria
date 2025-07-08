@@ -1,6 +1,6 @@
 {
-  "id": "b152d8c1-f8c0-44bc-9c92-fc775460d412",
-  "prevId": "a7a575cc-b5f0-447b-8629-57c728024cdb",
+  "id": "6c2f87c8-0150-4948-bc69-624addeed7db",
+  "prevId": "84a0e009-02ae-4b0c-8c46-d9feefea02a4",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -89,6 +89,94 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.tokens": {
+      "name": "tokens",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "code": {
+          "name": "code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "token_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "token_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'PENDING'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "tokens_user_id_users_id_fk": {
+          "name": "tokens_user_id_users_id_fk",
+          "tableFrom": "tokens",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "tokens_code_unique": {
+          "name": "tokens_code_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "code"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.users": {
       "name": "users",
       "schema": "",
@@ -140,7 +228,7 @@
           "name": "phone",
           "type": "varchar",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "phone_verified": {
           "name": "phone_verified",
@@ -155,7 +243,7 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": "'PARTICIPANT'"
+          "default": "'FREE'"
         },
         "created_at": {
           "name": "created_at",
@@ -182,6 +270,13 @@
           "columns": [
             "email"
           ]
+        },
+        "users_phone_unique": {
+          "name": "users_phone_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "phone"
+          ]
         }
       },
       "policies": {},
@@ -190,12 +285,28 @@
     }
   },
   "enums": {
+    "public.token_status": {
+      "name": "token_status",
+      "schema": "public",
+      "values": [
+        "PENDING",
+        "EXPIRED"
+      ]
+    },
+    "public.token_type": {
+      "name": "token_type",
+      "schema": "public",
+      "values": [
+        "EMAIL",
+        "PHONE"
+      ]
+    },
     "public.user_role": {
       "name": "user_role",
       "schema": "public",
       "values": [
-        "PARTICIPANT",
-        "ADMINISTRATOR"
+        "FREE",
+        "PAID"
       ]
     }
   },

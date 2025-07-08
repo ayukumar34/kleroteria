@@ -12,6 +12,7 @@ import postgres from "postgres";
 import {
   users,
   sessions,
+  tokens,
 } from "./schema";
 
 const connectionString = process.env.SUPABASE_CONNECTION_STRING
@@ -27,11 +28,13 @@ const client = postgres(connectionString, { prepare: false });
 export const schema = {
   users,
   sessions,
+  tokens,
 };
 
 // Export types
 export type User = typeof users.$inferSelect;
 export type Session = typeof sessions.$inferSelect;
+export type Token = typeof tokens.$inferSelect;
 
 // Create database
 export const db = drizzle(client, { schema });

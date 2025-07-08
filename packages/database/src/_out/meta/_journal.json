@@ -5,22 +5,15 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1751317093301,
-      "tag": "0000_early_monster_badoon",
+      "when": 1752007617932,
+      "tag": "0000_faithful_jackal",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
-      "when": 1751317950707,
-      "tag": "0001_grey_lethal_legion",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1751318009363,
-      "tag": "0002_overrated_bloodstrike",
+      "when": 1752010986297,
+      "tag": "0001_reflective_pride",
       "breakpoints": true
     }
   ]

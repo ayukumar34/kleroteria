@@ -28,8 +28,8 @@ import {
   FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import InputPassword from "@/components/ui/input.password";
-import InputPhone from "@/components/ui/input.phone";
+import InputPassword from "@/components/ui/input-password";
+import InputPhone from "@/components/ui/input-phone";
 
 // Next.js Components
 import Link from "next/link";
@@ -87,7 +87,7 @@ export function SignUpForm({
         return;
       }
 
-      router.push('/');
+      router.push('/verify-email');
     } finally {
       setLoading(false);
     }
